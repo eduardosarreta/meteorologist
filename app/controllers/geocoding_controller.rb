@@ -14,12 +14,14 @@ class GeocodingController < ApplicationController
     #
     # The street address that the user typed is in the variable @street_address.
     # ==========================================================================
+    location_to_go_in_url = @street_address.gsub(" ","+")
+    url_without_street_address = "http://maps.googleapis.com/maps/api/geocode/json?address="
+    url_with_address = url_without_street_address + location_to_go_in_url
+    parsed_data = JSON.parse(open(url_with_address).read)
 
+    @latitude = parsed_data["results"][0]["geometry"]["location"]["lat"]
 
-
-    @latitude = "Replace this string with your answer."
-
-    @longitude = "Replace this string with your answer."
+    @longitude = parsed_data["results"][0]["geometry"]["location"]["lng"]
 
     render("geocoding/street_to_coords.html.erb")
   end
